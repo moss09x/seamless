@@ -1,0 +1,13 @@
+[project]
+name = "seamless"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    "just-playback>=1.0.0",
+    "slint>=1.18.1b1",
+    "tinytag>=2.3.2",
+    "xdialog",
+]

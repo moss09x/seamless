@@ -1,0 +1,91 @@
+import { VerticalBox, HorizontalBox } from "std-widgets.slint";
+
+export global Theme {
+    in-out property <brush> background: #1d1d1d;
+    in-out property <brush> foreground: #303030;
+    in-out property <brush> highlighted: #606060;
+    in-out property <brush> border: #434343;
+    in-out property <brush> text: #dedede;
+}
+
+component Button inherits Rectangle {
+    in property <string> text;
+    callback clicked();
+
+    background: touch.pressed ? Theme.highlighted : Theme.foreground;
+
+    border-width: 1px;
+    border-color: Theme.border;
+
+    min-height: 50px;
+
+    Text {
+        text: root.text;
+        color: Theme.text;
+        font-size: 14px;
+    }
+
+    touch := TouchArea {
+        clicked => {
+            root.clicked()
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    callback toggle_playback();
+    callback open_song();
+
+    in property <string> song;
+    in property <string> artist;
+    in property <image> cover: @image-url("../assets/placeholder_cover.png");
+
+    in-out property <bool> playing: false;
+
+    background: Theme.background;
+
+    VerticalBox {
+        padding: 0px;
+        spacing: 0px;
+    
+        Image {
+            source: cover;
+            image-fit: ImageFit.cover;
+        }
+
+        if song != "" : Rectangle {
+            background: Theme.foreground;
+
+            border-color: Theme.border;
+            border-width: 1px;
+
+            min-height: 30px;
+
+            Text {
+                text: song + (artist != "" ? " by " + artist : "");
+                color: Theme.text;
+            }
+        }
+        
+        HorizontalBox {
+            padding: 0px;
+            spacing: 0px;
+            
+            Button {
+                text: playing ? "Pause" : "Play";
+
+                clicked => {
+                    root.toggle_playback();
+                }
+            }
+
+            Button {
+                text: "Open";
+
+                clicked => {
+                    root.open_song();
+                }
+            }
+        }
+    }
+}
